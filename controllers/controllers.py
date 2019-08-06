@@ -1,20 +1,55 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+import os
+import os.path
+import glob
 
-# class Debranding-project(http.Controller):
-#     @http.route('/debranding-project/debranding-project/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+class Debranding-project(http.Controller):
+@http.route([
+'/web/test',
+'/test',
+], type='http', auth="none")
+ 
+def suppressionMot(m,n,file):
+	fileodoo=open(file, "r")
+	contenu=fileodoo.read()
+	traitement=""
+	i=0
+	size=len(m)
+	taille=len(contenu)
 
-#     @http.route('/debranding-project/debranding-project/objects/', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('debranding-project.listing', {
-#             'root': '/debranding-project/debranding-project',
-#             'objects': http.request.env['debranding-project.debranding-project'].search([]),
-#         })
+	while i<taille:
+		if contenu[i]==m[0]:
 
-#     @http.route('/debranding-project/debranding-project/objects/<model("debranding-project.debranding-project"):obj>/', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('debranding-project.object', {
-#             'object': obj
-#         })
+			if contenu[i:i+size]==m:
+				traitement=contenu[0:i]+n+contenu[i+size:taille]
+				taille=taille-size
+				contenu=traitement
+				i=i+size
+			else :
+				i=i+1
+				
+		i=i+1
+	
+	fileodoo.close()
+	fileodoo=open(file, "w")
+	fileodoo.write(contenu)
+	fileodoo.close()
+
+
+path ="../../"
+files = []
+ 
+files = [f for f in glob.glob(path +"**/i18n/*.po")]
+
+for f in files:
+    suppressionMot("Odoo","",f)
+    suppressionMot("odoo","",f)
+    suppressionMot("www.odoo.com","company-website",f)
+
+files = [f for f in glob.glob(path +"/web/views/webclient_templates.xml") and f in glob.glob(path +"/web/views/databse_manager.html") ]
+for f in files:
+    suppressionMot("favicon.ico","",f)
+
+
+
