@@ -11,7 +11,7 @@ class Debranding-project(http.Controller):
 ], type='http', auth="none")
  
 def suppressionMot(m,n,file):
-	fileodoo=open(file, "r")
+	fileodoo=open(file, "r")# will probably need encoding='utf-8' to manage few errors
 	contenu=fileodoo.read()
 	traitement=""
 	i=0
@@ -40,7 +40,7 @@ def suppressionMot(m,n,file):
 path ="../../"
 files = []
  
-files = [f for f in glob.glob(path +"**/i18n/*.po")]
+files = [f for f in glob.glob(path +"**/i18n/*.po")] if "fr.po" in f or "ar.po" in f or "en_" in f]
 
 for f in files:
     suppressionMot("Odoo","",f)
@@ -51,5 +51,23 @@ files = [f for f in glob.glob(path +"/web/views/webclient_templates.xml") and f 
 for f in files:
     suppressionMot("favicon.ico","",f)
 
+def replaceOccurrencesInFile(oldText, newText, atFile):
+    f = open(atFile, 'r')
+    f_temp = open(atFile.split('.')[0]+"_temp.po", 'w')
+    for line in f1:
+        if("title" in line and "odoo" in line.lower()):
+        	f_temp.write(line.replace(oldText, newText))
+        else:
+        	f_temp.write(line)
+    f.close()
+    f_temp.close()
+    #the next two line work perfectly on my tests, but make sure to try them out carefully
+    os.remove(atFile)
+    os.rename(atFile.split('.')[0]+"_temp.po", atFile)
 
+def editDialogs(oldText, newText):
+	paths = [f for f in glob.glob("../../web/static/src/js/services/crash_manager.js") and f in glob.glob("../../web/static/src/js/core/dialog.js")]
+	for f in path:
+		replaceOccurrencesInFile(oldText, newText, f)
 
+editDialogs('Odoo', 'debranded_Odoo')
