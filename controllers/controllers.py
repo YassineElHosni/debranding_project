@@ -40,7 +40,7 @@ def suppressionMot(m,n,file):
 path ="../../"
 files = []
  
-files = [f for f in glob.glob(path +"**/i18n/*.po")] if "fr.po" in f or "ar.po" in f or "en_" in f]
+files = [f for f in glob.glob(path +"**/i18n/*.po") if "fr.po" in f or "ar.po" in f or "en_" in f]
 
 for f in files:
     suppressionMot("Odoo","",f)
