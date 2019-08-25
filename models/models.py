@@ -6,7 +6,8 @@ import os
 import os.path
 import glob
 
-x_root_path = ''
+server_path = './'  # equal to server/
+addons_path = server_path, 'odoo/addons'
 
 
 # <editor-fold desc="changer backend code">
@@ -26,16 +27,16 @@ def replace_occurrences_in_file(old_text, new_text, at_file, theClue):
 
 
 def edit_dialogs(old_text, new_text):
-    paths = [f for f in glob.glob("../../web/static/src/js/services/crash_manager.js") if
-             f in glob.glob("../../web/static/src/js/core/dialog.js")]
+    paths = [f for f in glob.glob(addons_path, "/web/static/src/js/services/crash_manager.js") if
+             f in glob.glob(addons_path, "/web/static/src/js/core/dialog.js")]
     for f in paths:
         replace_occurrences_in_file(old_text, new_text, f, "title")
 
 
 def edit_translations(old_text, new_text):
-    paths = [f for f in glob.glob("../../*/i18n/*.po") if "fr.po" in f or "en_AU.po" in f or "en_GB" in f]
+    paths = [f for f in glob.glob(addons_path, "/*/i18n/*.po") if "fr.po" in f or "en_AU.po" in f or "en_GB" in f]
     for f in paths:
-        replace_occurrences_in_file(old_text, new_text, f, "msg")
+        replace_occurrences_in_file(old_text, new_text, f, "msgstr")
 
 
 def debranding_parts(old_text, new_text):  # put all your debranding parts here
@@ -46,7 +47,7 @@ def debranding_parts(old_text, new_text):  # put all your debranding parts here
     edit_translations(old_text, new_text)
 
 
-def debrand(new_odoo, json_file_name='../../../../debranding_config.json'):
+def debrand(new_odoo, json_file_name=server_path + 'debranding_config.json'):
     # check if json file exists
     if os.path.isfile(json_file_name):
         # get company_name
@@ -75,7 +76,7 @@ def debrand(new_odoo, json_file_name='../../../../debranding_config.json'):
 
 # <editor-fold desc="changer config settings">
 def get_x_company_name():
-    json_file_name = '../../../../debrandingConfig.json'
+    json_file_name = server_path + 'debranding_config.json'
     data_store = "Odoo"
     if os.path.isfile(json_file_name):
         with open(json_file_name, 'r') as f:
@@ -88,9 +89,9 @@ def get_x_company_name():
         return data_store
 
 
-class changer_backend_config(models.Model):
+class changer_backend_config(models.TransientModel):
     _inherit = 'res.config.settings'
-    _name = 'changer.backend.config.settings'
+    # _name = 'changer.backend.config.settings'
 
     x_company_name = fields.Char(string='Branding Name',
                                  size=48,
@@ -101,7 +102,7 @@ class changer_backend_config(models.Model):
 
     @api.depends('x_company_name')
     def set_x_company_name(self):
-        json_file_name = '../../../../debrandingConfig.json'
+        json_file_name = server_path + 'debranding_config.json'
         new_od00 = self.x_company_name
         data_store = {
             "company_name": new_od00
@@ -121,6 +122,6 @@ class changer_backend_config(models.Model):
         # debrand('Odoo', new_od00)
 
         with open(json_file_name, 'w') as f:
-            json.dump(data_store)
+            json.dump(data_store, f)
         return True
 # </editor-fold>
