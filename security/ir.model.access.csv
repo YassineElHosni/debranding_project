@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_debranding-project_debranding-project,debranding-project.debranding-project,model_debranding-project_debranding-project,,1,0,0,0
+access_debranding-project_debranding-project,debranding-project.debranding-project,model_debranding-project_debranding-project,,1,1,1,1
