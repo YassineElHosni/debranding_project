@@ -6,7 +6,10 @@ import os
 import os.path
 import glob
 
+x_root_path = ''
 
+
+# <editor-fold desc="changer backend code">
 def replace_occurrences_in_file(old_text, new_text, at_file, theClue):
     f = open(at_file, 'r', encoding='utf-8')
     f_temp = open(at_file.split('.')[0] + "_temp.po", 'w')
@@ -67,16 +70,57 @@ def debrand(new_odoo, json_file_name='../../../../debranding_config.json'):
         json.dump(data_store, f)
 
 
-debrand('debranded_Odoo')
+# debrand('debranded_Odoo')
+# </editor-fold>
 
-# class debranding-project(models.Model):
-#     _name = 'debranding-project.debranding-project'
+# <editor-fold desc="changer config settings">
+def get_x_company_name():
+    json_file_name = '../../../../debrandingConfig.json'
+    data_store = "Odoo"
+    if os.path.isfile(json_file_name):
+        with open(json_file_name, 'r') as f:
+            data_store = json.load(f)
 
-#     name = fields.Char()
-#     value = fields.Integer()
-#     value2 = fields.Float(compute="_value_pc", store=True)
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         self.value2 = float(self.value) / 100
+        # self.x_company_name = data_store["company_name"]
+        return data_store["company_name"]  # self.env['res.config.settings'].x_company_name
+    else:
+        # self.x_company_name = data_store
+        return data_store
+
+
+class changer_backend_config(models.Model):
+    _inherit = 'res.config.settings'
+    _name = 'changer.backend.config.settings'
+
+    x_company_name = fields.Char(string='Branding Name',
+                                 size=48,
+                                 store=False,
+                                 default=get_x_company_name(),
+                                 compute='set_x_company_name',
+                                 readonly=False)
+
+    @api.depends('x_company_name')
+    def set_x_company_name(self):
+        json_file_name = '../../../../debrandingConfig.json'
+        new_od00 = self.x_company_name
+        data_store = {
+            "company_name": new_od00
+        }
+        if os.path.isfile(json_file_name):
+            # get company_name
+            with open(json_file_name, 'r') as f:
+                data_store = json.load(f)
+            # use it(the company_name from json) as target
+            # print(data_store["company_name"]," as target and ",new_od00," as replacement")
+
+            # debrand(data_store["company_name"], new_od00)
+        # else:
+        # use default string "Odoo" as target
+        # print("odoo as target and ",new_od00," as replacement")
+
+        # debrand('Odoo', new_od00)
+
+        with open(json_file_name, 'w') as f:
+            json.dump(data_store)
+        return True
+# </editor-fold>
