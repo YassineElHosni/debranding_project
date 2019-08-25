@@ -5,11 +5,11 @@ import os.path
 import glob
 import json
 
-class Debranding-project(http.Controller):
-@http.route([
-'/web/test',
-'/test',
-], type='http', auth="none")
+# class Debranding-project(http.Controller):
+# @http.route([
+# '/web/test',
+# '/test',
+# ], type='http', auth="none")
 
 # too complexe, makes it hard to edit, plus as a wise man said:
 #	"never waste time creating what already exists, understand it and make of it something better"
@@ -55,59 +55,59 @@ class Debranding-project(http.Controller):
 # for f in files:
 #     suppressionMot("favicon.ico","",f)
 
-def replaceOccurrencesInFile(oldText, newText, atFile, theClue):
-    f = open(atFile, 'r', encoding='utf-8')
-    f_temp = open(atFile.split('.')[0]+"_temp.po", 'w')
-    for line in f:
-        if(theClue in line and oldText in line.lower()):
-        	f_temp.write(line.replace(oldText, newText))
-        else:
-        	f_temp.write(line)
-    f.close()
-    f_temp.close()
-    # the next two line work perfectly on my tests, but make sure to try them out carefully
-    os.remove(atFile)
-    os.rename(atFile.split('.')[0]+"_temp.po", atFile)
-
-def editDialogs(oldText, newText):
-	paths = [f for f in glob.glob("../../web/static/src/js/services/crash_manager.js") and f in glob.glob("../../web/static/src/js/core/dialog.js")]
-	for f in paths:
-		replaceOccurrencesInFile(oldText, newText, f, "title")
-
-def editTranslations(oldText, newText):
-	paths = [f for f in glob.glob("../../*/i18n/*.po") if "fr.po" in f or "en_AU.po" in f or "en_GB" in f]
-	for f in paths:
-		replaceOccurrencesInFile(oldText, newText, f, "msg")
-
-def debrandingParts(oldText, newText): #put all your debranding parts here
-
-        # error + warnings dialogs
-        editDialogs(oldText, newText)
-        # translations(ar, fr, en)
-        editTranslations(oldText, newText)
-
-
-def debrand(newOdoo, jsonfilename = '../../../../debrandingConfig.json'):
-    # check if json file exists
-    if os.path.isfile(jsonfilename):
-        # get company_name
-        with open(jsonfilename, 'r') as f:
-            datastore = json.load(f)
-        # use it(the company_name from json) as target
-        # print(datastore["company_name"]," as target and ",newOdoo," as replacement")
-
-        debrandingParts(datastore["company_name"], newOdoo)
-    else:
-        # use default string "Odoo" as target
-        # print("odoo as target and ",newOdoo," as replacement")
-
-        debrandingParts('Odoo', newOdoo)
-
-    # write changes
-    datastore = {
-        "company_name": newOdoo
-    }
-    with open(filename, 'w') as f:
-        json.dump(datastore, f)
-
-debrand('debranded_Odoo')
+# def replaceOccurrencesInFile(oldText, newText, atFile, theClue):
+#     f = open(atFile, 'r', encoding='utf-8')
+#     f_temp = open(atFile.split('.')[0]+"_temp.po", 'w')
+#     for line in f:
+#         if(theClue in line and oldText in line.lower()):
+#         	f_temp.write(line.replace(oldText, newText))
+#         else:
+#         	f_temp.write(line)
+#     f.close()
+#     f_temp.close()
+#     # the next two line work perfectly on my tests, but make sure to try them out carefully
+#     os.remove(atFile)
+#     os.rename(atFile.split('.')[0]+"_temp.po", atFile)
+# 
+# def editDialogs(oldText, newText):
+# 	paths = [f for f in glob.glob("../../web/static/src/js/services/crash_manager.js") and f in glob.glob("../../web/static/src/js/core/dialog.js")]
+# 	for f in paths:
+# 		replaceOccurrencesInFile(oldText, newText, f, "title")
+# 
+# def editTranslations(oldText, newText):
+# 	paths = [f for f in glob.glob("../../*/i18n/*.po") if "fr.po" in f or "en_AU.po" in f or "en_GB" in f]
+# 	for f in paths:
+# 		replaceOccurrencesInFile(oldText, newText, f, "msg")
+# 
+# def debrandingParts(oldText, newText): #put all your debranding parts here
+# 
+#         # error + warnings dialogs
+#         editDialogs(oldText, newText)
+#         # translations(ar, fr, en)
+#         editTranslations(oldText, newText)
+# 
+# 
+# def debrand(new_odoo, jsonfilename = '../../../../debrandingConfig.json'):
+#     # check if json file exists
+#     if os.path.isfile(jsonfilename):
+#         # get company_name
+#         with open(jsonfilename, 'r') as f:
+#             datastore = json.load(f)
+#         # use it(the company_name from json) as target
+#         # print(datastore["company_name"]," as target and ",new_odoo," as replacement")
+# 
+#         debrandingParts(datastore["company_name"], new_odoo)
+#     else:
+#         # use default string "Odoo" as target
+#         # print("odoo as target and ",new_odoo," as replacement")
+# 
+#         debrandingParts('Odoo', new_odoo)
+# 
+#     # write changes
+#     datastore = {
+#         "company_name": new_odoo
+#     }
+#     with open(filename, 'w') as f:
+#         json.dump(datastore, f)
+# 
+# debrand('debranded_Odoo')
