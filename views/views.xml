@@ -1,5 +1,41 @@
 <odoo>
   <data>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">debranding.project.config</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block"
+                     string="Changer"
+                     data-string="Changer"
+                     data-key="debranding-project"
+                >
+                    <h2>Changer Backend - Configurations</h2>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                        <label for="x_company_name" string="Company Name"/>
+                            <div id="x_company_name" class="oe_inline">
+                                <field name="x_company_name"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="my_settings_action" model="ir.actions.act_window">
+        <field name="name">debranding configuration</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+    <menuitem id="my_settings_menu" name="Debranding settings" parent="base.menu_administration" action="my_settings_action"/>
+    
     <!-- explicit list view definition -->
     <!--
     <record model="ir.ui.view" id="debranding-project.list">
