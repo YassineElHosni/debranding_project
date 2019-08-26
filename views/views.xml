@@ -18,6 +18,7 @@
                         <label for="x_company_name" string="Company Name"/>
                             <div id="x_company_name" class="oe_inline">
                                 <field name="x_company_name"/>
+                                <button name="set_x_company_name" type="object" string="run changer" class="oe_highlight"/>
                             </div>
                         </div>
                     </div>
