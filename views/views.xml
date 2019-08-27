@@ -18,8 +18,13 @@
                         <label for="x_company_name" string="Company Name"/>
                             <div id="x_company_name" class="oe_inline">
                                 <field name="x_company_name"/>
-                                <button name="set_x_company_name" type="object" string="run changer" class="oe_highlight"/>
                             </div>
+                        <label for="x_color" string="Color"/>
+                            <div id="x_color" class="oe_inline">
+                                <field name="x_color" class="jscolor"/>
+                            </div>
+
+                        <button name="set_x_company_name" type="object" string="run changer" class="oe_highlight"/>
                         </div>
                     </div>
                 </div>
@@ -36,7 +41,13 @@
         <field name="target">inline</field>
     </record>
     <menuitem id="my_settings_menu" name="Debranding settings" parent="base.menu_administration" action="my_settings_action"/>
-    
+
+    <!-- Debrand Assets -->
+    <template id="assets_backend" name="js assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/debranding_project/static/src/js/jscolor.js"/>
+        </xpath>
+    </template>
     <!-- explicit list view definition -->
     <!--
     <record model="ir.ui.view" id="debranding-project.list">
