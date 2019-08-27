@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "debranding-project",
+    'name': "debranding_project",
 
     'summary': """
         backend debranding module""",
