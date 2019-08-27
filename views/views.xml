@@ -24,7 +24,7 @@
                                 <field name="x_color" class="jscolor"/>
                             </div>
 
-                        <button name="set_x_company_name" type="object" string="run changer" class="oe_highlight"/>
+<!--                        <button name="set_x_company_name" type="object" string="run changer" class="oe_highlight"/>-->
                         </div>
                     </div>
                 </div>
