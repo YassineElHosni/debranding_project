@@ -21,6 +21,7 @@
                             </div>
                         <label for="x_color" string="Color"/>
                             <div id="x_color" class="oe_inline">
+                                <script type="text/javascript">run_jscolor()</script>
                                 <field name="x_color" class="jscolor"/>
                             </div>
 
@@ -45,7 +46,7 @@
     <!-- Debrand Assets -->
     <template id="assets_backend" name="js assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/debranding_project/static/src/js/jscolor.js"/>
+            <script type="text/javascript" src="/debranding_project/static/src/js/jscolor.js"></script>
         </xpath>
     </template>
     <!-- explicit list view definition -->

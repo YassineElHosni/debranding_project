@@ -10,12 +10,21 @@
  * See usage examples at http://jscolor.com/examples/
  */
 
-
+	isLive = false;
+function run_jscolor() {
+	if(isLive && document.getElementsByClassName('jscolor')[0].style.length==0){
+		isLive = false;
+		window.jscolor = null;
+	}
+	if (!isLive) {
+		isLive=true;
+		console.log('run_jscolor start!!');
 "use strict";
 
 
 if (!window.jscolor) { window.jscolor = (function () {
 
+		console.log('_jscolor on!!');
 
 var jsc = {
 
@@ -987,7 +996,7 @@ var jsc = {
 		this.uppercase = true; // whether to show the color code in upper case
 		this.onFineChange = null; // called instantly every time the color changes (value can be either a function or a string with javascript code)
 		this.activeClass = 'jscolor-active'; // class to be set to the target element when a picker window is open on it
-		this.overwriteImportant = false; // whether to overwrite colors of styleElement using !important
+		this.overwriteImportant = true; // whether to overwrite colors of styleElement using !important
 		this.minS = 0; // min allowed saturation (0 - 100)
 		this.maxS = 100; // max allowed saturation (0 - 100)
 		this.minV = 0; // min allowed value (brightness) (0 - 100)
@@ -1838,18 +1847,22 @@ jsc.jscolor.lookupClass = 'jscolor';
 
 
 jsc.jscolor.installByClassName = function (className) {
-	var inputElms = document.getElementsByTagName('input');
-	var buttonElms = document.getElementsByTagName('button');
+	var inputElms = document.getElementsByClassName('jscolor')//document.getElementsByTagName('input');
+	// var buttonElms = document.getElementsByTagName('button');
 
 	jsc.tryInstallOnElements(inputElms, className);
-	jsc.tryInstallOnElements(buttonElms, className);
+	// jsc.tryInstallOnElements(buttonElms, className);
 };
 
 
 jsc.register();
 
 
+		console.log('_jscolor end on!!');
 return jsc.jscolor;
 
 
 })(); }
+		console.log('run_jscolor end!!');
+	}
+};
