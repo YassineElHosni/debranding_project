@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from polib import pofile
+from . import polib
 import json
 import os
 import os.path
@@ -46,7 +46,7 @@ def edit_dialogs(old_text, new_text):
 
 
 def po_replace_msgsr(old_text, new_text, file):
-    po = pofile(file)
+    po = polib.pofile(file)
     for entry in po:
         if old_text in entry.msgstr:
             entry.msgstr = entry.msgid.replace(old_text, new_text)
@@ -116,7 +116,7 @@ def debrand(new_odoo, new_color):
 # </editor-fold>
 
 # <editor-fold desc="changer config settings">
-def get_x_company_name():  # get form json file
+def get_data_values():  # get form json file
     data_store = {
         "company_name": 'Odoo',
         "color": '7C7BAD'
@@ -145,7 +145,7 @@ class changer_backend_config(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(changer_backend_config, self).get_values()
-        data_values = get_x_company_name()
+        data_values = get_data_values()
         res.update(
             x_company_name=data_values["company_name"],
             x_color=data_values["color"],
@@ -156,7 +156,7 @@ class changer_backend_config(models.TransientModel):
     def set_values(self):
         debrand(self.x_company_name, self.x_color)
         super(changer_backend_config, self).set_values()
-        self.env.ref('res_config_settings_view_form').write({'x_company_name': self.x_company_name})  # BOTH NEED RETHINKING
+        self.env.ref('res_config_settings_view_form').write({'x_company_name': self.x_company_name})  # BOTH NEED RETHINKING/FIXING
         self.env.ref('res_config_settings_view_form').write({'x_color': self.x_color})  # RETURNS COLUMN 'x_color' CAN'T BE SET TO NULL KIND OF EXCEPTION...
 
     # @api.depends('x_company_name', 'x_color')
