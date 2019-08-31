@@ -13,7 +13,7 @@
     'website': "http://www.maxware.ma",
     'category': 'Tools',
     'version': '0.1',
-    'depends': ['base'],
+    'depends': ['base','web'],
     'data': [
         'views/views.xml',
         'views/templates.xml',
