@@ -46,11 +46,14 @@ def edit_dialogs(old_text, new_text):
 
 
 def po_replace_msgsr(old_text, new_text, file):
+    text_found_count = 0
     po = polib.pofile(file)
     for entry in po:
         if old_text in entry.msgstr:
-            entry.msgstr = entry.msgid.replace(old_text, new_text)
-    po.save()
+            entry.msgstr = entry.msgstr.replace(old_text, new_text)
+            text_found_count = text_found_count + 1
+    if text_found_count > 0:
+        po.save()
 
 
 def edit_translations(old_text, new_text):  # needs testing
@@ -75,12 +78,18 @@ def get_community_color():  # get form scss file
                 return line.split('#')[len(line.split('#')) - 1].replace(';', '')
 
 
+def edit_head_title(old_text, new_text):
+    head_title_path = addons_path + '/web/views/webclient_templates.xml'
+
+
 def debranding_parts(old_text, new_text, new_color):  # put all your debranding parts here
     if old_text != new_text:
         # error + warnings dialogs
         edit_dialogs(old_text, new_text)
         # translations(ar, fr, en)
         edit_translations(old_text, new_text)  # NEEDS TESTING!
+        # title
+        edit_head_title(old_text, new_text)  # EMPTY
     # community color changer
     if new_color != get_community_color():
         edit_community_color(new_color)  # TESTED
@@ -133,7 +142,7 @@ def get_data_values():  # get form json file
 class changer_backend_config(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    x_company_name = fields.Char(string='Branding Name',
+    x_company_name = fields.Char(string='Brand Name',
                                  store=True,
                                  readonly=False,
                                  required=True)
@@ -141,6 +150,10 @@ class changer_backend_config(models.TransientModel):
                           store=True,
                           readonly=False,
                           required=True)
+
+    # x_company_logo = fields.Binary(
+    #                     string="Brand Logo",
+    #                     required=True)
 
     @api.model
     def get_values(self):
@@ -156,8 +169,8 @@ class changer_backend_config(models.TransientModel):
     def set_values(self):
         debrand(self.x_company_name, self.x_color)
         super(changer_backend_config, self).set_values()
-        self.env.ref('res_config_settings_view_form').write({'x_company_name': self.x_company_name})  # BOTH NEED RETHINKING/FIXING
-        self.env.ref('res_config_settings_view_form').write({'x_color': self.x_color})  # RETURNS COLUMN 'x_color' CAN'T BE SET TO NULL KIND OF EXCEPTION...
+        self.env.ref('debranding_project.res_config_settings_view_form').write({'x_company_name': self.x_company_name,
+                                                                                'x_color': self.x_color})  # RETURNS COLUMN 'x_color' CAN'T BE SET TO NULL KIND OF EXCEPTION...
 
     # @api.depends('x_company_name', 'x_color')
     # def set_x_company_name(self):
