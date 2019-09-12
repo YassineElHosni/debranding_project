@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block"
-                     string="Changer"
-                     data-string="Changer"
+                     string="Debranding"
+                     data-string="Debranding"
                      data-key="debranding-project"
                 >
-                    <h2>Changer Backend - Configurations</h2>
+                    <h2>Debranding - Configurations</h2>
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_right_pane">
                         <label for="x_company_name" string="Company Name"/>
