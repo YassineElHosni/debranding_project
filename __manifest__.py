@@ -18,6 +18,7 @@
         'views/views.xml',
         'views/templates.xml',
     ],
+    'qweb': ['static/src/xml/base.xml'],
     'demo': [
         'demo/demo.xml',
     ],

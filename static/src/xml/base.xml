@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="UserMenu">
+        <t t-jquery="div.dropdown-menu.dropdown-menu-right"
+           t-operation="replace">
+            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                <a role="menuitem" href="#" data-menu="shortcuts"
+                   class="dropdown-item">Shortcuts</a>
+                <div class="dropdown-divider" role="separator"></div>
+                <a role="menuitem" href="#" data-menu="settings"
+                   class="dropdown-item">Preferences</a>
+                <a role="menuitem" href="#" data-menu="logout"
+                   class="dropdown-item">Log out</a>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="DashboardMain">
+        <t t-jquery=".o_web_settings_dashboard" t-operation="replace">
+            <div class="container-fluid py-2 o_web_settings_dashboard">
+                <div class="form-row">
+                    <div class="o_web_settings_dashboard_enterprise"/>
+                    <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                        <div class="text-center o_web_settings_dashboard_apps"></div>
+                        <script type="text/javascript">document.getElementsByClassName('o_web_settings_dashboard_pills')[0].remove();</script>
+                        <div class="text-center o_web_settings_dashboard_translations mt8"></div>
+                    </div>
+                    <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                        <div class="text-center o_web_settings_dashboard_invitations"></div>
+                        <div class="text-center o_web_settings_dashboard_company mt8"></div>
+                    </div>
+                    <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                        <div class="col-md-12">
+                            <a t-if="debug != true" class="oe_activate_debug_mode float-right" href="?debug" >Activate the developer mode</a>
+                            <br t-if="debug != true"/>
+                            <a t-if="debug != 'assets'" class="oe_activate_debug_mode float-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
+                            <br t-if="debug != 'assets'"/>
+                            <a t-if="debug != false" class="oe_activate_debug_mode float-right" href="/web" >Deactivate the developer mode</a>
+                            <br t-if="debug != false"/>
+                            <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+    <t t-extend="mail.client_action">
+      <t t-jquery=".o_mail_request_permission" t-operation="inner">
+        Your permission is required to <a href="#"> enable desktop notifications</a>.
+      </t>
+    </t>
+</templates>
