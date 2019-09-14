@@ -9,6 +9,7 @@ import re
 
 server_path = './'  # equal to server/
 addons_path = server_path + 'odoo/addons'
+web_path = addons_path + '/web'
 json_file_name = server_path + 'debranding_config.json'
 
 
@@ -40,7 +41,7 @@ def replace_occurrences_in_file(old_text, new_text, at_file, theClue, target_lin
 
 
 def edit_dialogs(old_text, new_text):
-    web_js_path = addons_path + "/web/static/src/js"
+    web_js_path = web_path + "/static/src/js"
     replace_occurrences_in_file(old_text, new_text, web_js_path + "/services/crash_manager.js", "title")
     replace_occurrences_in_file(old_text, new_text, web_js_path + "/core/dialog.js", "title")
 
@@ -64,14 +65,14 @@ def edit_translations(old_text, new_text):  # needs testing
 
 
 def edit_community_color(new_color):
-    web_scss_path = addons_path + '/web/static/src/scss/'
+    web_scss_path = web_path + '/static/src/scss/'
     replace_occurrences_in_file(0, new_color, web_scss_path + 'primary_variables.scss', '$o-community-color', 12)
     replace_occurrences_in_file(0, new_color, web_scss_path + 'fields_extra.scss', 'color', 28)
     replace_occurrences_in_file(0, new_color, web_scss_path + 'form_view_extra.scss', 'color', 72)
 
 
 def get_community_color():  # get form scss file
-    web_scss_path = addons_path + '/web/static/src/scss/'
+    web_scss_path = web_path + '/static/src/scss/'
     with open(web_scss_path + 'primary_variables.scss', 'r') as f:
         for line_index, line in enumerate(f, start=1):
             if line_index == 12 and '$o-community-color' in line:
@@ -79,17 +80,63 @@ def get_community_color():  # get form scss file
 
 
 def edit_head_title(old_text, new_text):
-    head_title_path = addons_path + '/web/views/webclient_templates.xml'
+    head_title_paths = [web_path + '/views/webclient_templates.xml', web_path + '/views/database_manager.html']
+    for path in head_title_paths:
+        if old_text.lower() == 'odoo':
+            replace_occurrences_in_file('<title t-esc="title or \''+old_text+'\'"/>',  # NEED RETHINKING!
+                                        '<title t-esc="title or \''+new_text+'\'"/>', path, '<title')
+        else:
+            replace_occurrences_in_file(old_text, new_text, path, '<title>')  # NEED RETHINKING!
 
 
-def debranding_parts(old_text, new_text, new_color):  # put all your debranding parts here
+def replace_database_manager_html():
+    target_file_path = web_path + '/views/database_manager.html'
+    debrand_file_path = addons_path + '/debranding_project/views/database_manager_debrand.html'
+    if not os.path.isfile(target_file_path.replace('.html', '_old.html')):
+        if os.path.isfile(target_file_path) and os.path.isfile(debrand_file_path):
+            with open(debrand_file_path, 'r') as f:
+                file_content = f.read()
+
+            # rename target file to keep untouched
+            os.rename(target_file_path, target_file_path.replace('.html', '_old.html'))
+
+            # create new file
+            with open(target_file_path, "w") as f:
+                f.write(file_content)
+
+
+def edit_favicon():
+    favicon_path = web_path + '/static/src/img/favicon.ico'
+    if not os.path.isfile(favicon_path.replace('.ico', '_old.ico')):
+        os.rename(favicon_path, favicon_path.replace('.ico', '_old.ico'))
+
+    favicon_path = web_path + '/static/src/img/logo.png'
+    if not os.path.isfile(favicon_path.replace('.png', '_old.png')):
+        os.rename(favicon_path, favicon_path.replace('.png', '_old.png'))
+
+    favicon_path = web_path + '/static/src/img/logo2.png'
+    if not os.path.isfile(favicon_path.replace('.png', '_old.png')):
+        os.rename(favicon_path, favicon_path.replace('.png', '_old.png'))
+
+    favicon_path = web_path + '/static/src/img/logo_inverse_white_206px.png'
+    if not os.path.isfile(favicon_path.replace('.png', '_old.png')):
+        os.rename(favicon_path, favicon_path.replace('.png', '_old.png'))
+
+
+def debranding_parts(old_text, new_text, new_color, db_manager_was_replaced):  # put all your debranding parts here
+    if not db_manager_was_replaced:  # HAS TO RUN ONCE AND BEFORE edit_head_title function.
+        # only removes odoo from database manager/selector, meaning no replacing with new text, just turning odooless..
+        replace_database_manager_html()  # TESTED
+        # rename favicon file.. this change will only happen at next server reset.
+        edit_favicon()  # TESTED
+
     if old_text != new_text:
         # error + warnings dialogs
         edit_dialogs(old_text, new_text)
         # translations(ar, fr, en)
-        edit_translations(old_text, new_text)  # NEEDS TESTING!
+        edit_translations(old_text, new_text)  # TESTED
         # title
-        edit_head_title(old_text, new_text)  # EMPTY
+        edit_head_title(old_text, new_text)  # NEEDS TESTING! # NEED RETHINKING!
     # community color changer
     if new_color != get_community_color():
         edit_community_color(new_color)  # TESTED
@@ -104,12 +151,12 @@ def debrand(new_odoo, new_color):
         # use it(the company_name from json) as target
         # print(data_store["company_name"]," as target and ",new_odoo," as replacement")
 
-        debranding_parts(old_data_store["company_name"], new_odoo, new_color)
+        debranding_parts(old_data_store["company_name"], new_odoo, new_color, True)
     else:
         # use default string "Odoo" as target
         # print("odoo as target and ",new_odoo," as replacement")
 
-        debranding_parts('Odoo', new_odoo, new_color)
+        debranding_parts('Odoo', new_odoo, new_color, False)
 
     # write changes
     data_store = {
@@ -170,7 +217,7 @@ class changer_backend_config(models.TransientModel):
         debrand(self.x_company_name, self.x_color)
         super(changer_backend_config, self).set_values()
         self.env.ref('debranding_project.res_config_settings_view_form').write({'x_company_name': self.x_company_name,
-                                                                                'x_color': self.x_color})  # RETURNS COLUMN 'x_color' CAN'T BE SET TO NULL KIND OF EXCEPTION...
+                                                                                'x_color': self.x_color})
 
     # @api.depends('x_company_name', 'x_color')
     # def set_x_company_name(self):
