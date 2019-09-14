@@ -13,21 +13,80 @@
                      data-key="debranding-project"
                 >
                     <h2>Debranding - Configurations</h2>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_right_pane">
-                        <label for="x_company_name" string="Company Name"/>
-                            <div id="x_company_name" class="oe_inline">
-                                <field name="x_company_name"/>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-4 o_setting_box">
+                            <div class="o_setting_right_pane">
+                            <label for="x_company_name" string="Company Name"/>
+                                <div id="x_company_name" class="oe_inline mt8">
+                                    <field name="x_company_name"/>
+                                </div>
+                            <label for="x_color" string="Color" class="mt8"/>
+                                <div id="x_color" class="oe_inline mt8">
+                                    <script type="text/javascript">run_jscolor()</script>
+                                    <field name="x_color" class="jscolor"/>
+                                </div>
                             </div>
-                        <label for="x_color" string="Color"/>
-                            <div id="x_color" class="oe_inline">
-                                <script type="text/javascript">run_jscolor()</script>
-                                <field name="x_color" class="jscolor"/>
-                            </div>
+                        </div>
 
-<!--                        <button name="set_x_company_name" type="object" string="run changer" class="oe_highlight"/>-->
+                        <div class="col-12 col-lg-8 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    Background odoo debranding features:
+                                </span>
+                                <div class="text-muted mt8">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    Dashboard debrander.
+                                    <span class="badge badge-info oe_inline o_enterprise_label">on install</span>
+                                    <span class="badge badge-info oe_inline o_enterprise_label">module depending</span>
+                                </div>
+                                <div class="text-muted">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    UserMenu debrander.
+                                    <span class="badge badge-info oe_inline o_enterprise_label">on install</span>
+                                    <span class="badge badge-info oe_inline o_enterprise_label">module depending</span>
+                                </div>
+                                <div class="text-muted mt8">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    Database manager/selector debranded.
+                                    <span class="badge badge-warning oe_inline o_enterprise_label">requires server restart</span>
+                                    <span class="badge badge-danger oe_inline o_enterprise_label">no undo yet</span>
+                                </div>
+                                <div class="text-muted">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    Favicon icon remover.
+                                    <span class="badge badge-warning oe_inline o_enterprise_label">requires server restart</span>
+                                    <span class="badge badge-danger oe_inline o_enterprise_label">no undo yet</span>
+                                </div>
+                                <div class="text-muted">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    Logo remover.
+                                    <span class="badge badge-warning oe_inline o_enterprise_label">requires server restart</span>
+                                    <span class="badge badge-danger oe_inline o_enterprise_label">no undo yet</span>
+                                </div>
+                                <div class="text-muted mt8">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    Title debrander/replacer.
+                                    <span class="badge badge-success oe_inline o_enterprise_label">on save</span>
+                                    <span class="badge badge-success oe_inline o_enterprise_label">temporary</span>
+                                </div>
+                                <div class="text-muted">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    Dialog warning/error debrander/replacer.
+                                    <span class="badge badge-warning oe_inline o_enterprise_label">requires server restart</span>
+                                    <span class="badge badge-success oe_inline o_enterprise_label">temporary</span>
+                                </div>
+                                <div class="text-muted">
+                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+                                    Community color replacer.
+                                    <span class="badge badge-success oe_inline o_enterprise_label">on save</span>
+                                    <span class="badge badge-success oe_inline o_enterprise_label">temporary</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
 
             </xpath>
